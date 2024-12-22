@@ -22,7 +22,7 @@ def fetch_all_recipe():
     return cur.fetchall()
 
 def fetch_specific_recipe(recipe_id):
-    cur.execute('SELECT id, title, making_time, serves, ingredients, cost from recipes where id = ?', recipe_id)
+    cur.execute('SELECT id, title, making_time, serves, ingredients, cost from recipes where id = ?', [recipe_id])
     return cur.fetchone()
 
 def register_recipe(recipe):
