@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from repository import *
 from types import *
+import uvicorn
 
 
 class RecipeBody(BaseModel):
@@ -13,20 +14,12 @@ class RecipeBody(BaseModel):
 
 app = FastAPI()
 
-@app.get("/")
+@app.get("/recipes")
 async def get_all_recipe():
     recipes = fetch_all_recipe()
     return {"recipes": recipes}
 
-@app.get("/{recipe_id}")
-async def get_specific_recipe(recipe_id):
-    if recipe_id.isdecimal() == False:
-        raise HTTPException(status_code=404, detail="Not Found")
-
-    recipe = fetch_specific_recipe(recipe_id)
-    return {"message": "Recipe details by id", "recipe": [recipe]}
-
-@app.post("/")
+@app.post("/recipes")
 async def post_new_recipe(body:RecipeBody):
 
     if body.title == "" or body.making_time == "" or body.serves == "" or body.ingredients == "" or body.cost == None or body.cost.isdecimal() == False:
@@ -59,3 +52,13 @@ async def delete_specific_recipe(recipe_id):
 
     return {"message": message}
 
+@app.get("/recipes/{recipe_id}")
+async def get_specific_recipe(recipe_id):
+    if recipe_id.isdecimal() == False:
+        raise HTTPException(status_code=404, detail="Not Found")
+
+    recipe = fetch_specific_recipe(recipe_id)
+    return {"message": "Recipe details by id", "recipe": [recipe]}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0,0,0,0", port=8000)
