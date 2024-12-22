@@ -14,7 +14,7 @@ class RecipeBody(BaseModel):
     making_time: str = ""
     serves: str = ""
     ingredients: str = ""
-    cost: str = ""
+    cost: int= None
 
 app = FastAPI()
 
