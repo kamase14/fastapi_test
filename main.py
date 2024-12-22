@@ -31,7 +31,7 @@ async def get_all_recipe():
 @app.post("/recipes")
 async def post_new_recipe(body:RecipeBody):
 
-    if body.title == "" or body.making_time == "" or body.serves == "" or body.ingredients == "" or body.cost == None or body.cost.isdecimal() == False:
+    if body.title == "" or body.making_time == "" or body.serves == "" or body.ingredients == "" or body.cost == None:
         return { "message": "Recipe creation failed!", "required": "title, making_time, serves, ingredients, cost" }
 
     recipe = register_recipe(body)
@@ -40,7 +40,7 @@ async def post_new_recipe(body:RecipeBody):
 @app.patch("/recipes/{recipe_id}")
 async def update_specific_recipe(recipe_id, body:RecipeBody):
 
-    if body.title == "" or body.making_time == "" or body.serves == "" or body.ingredients == "" or body.cost == None or body.cost.isdecimal() == False:
+    if body.title == "" or body.making_time == "" or body.serves == "" or body.ingredients == "" or body.cost == None:
         return { "message": "Recipe creation failed!", "required": "title, making_time, serves, ingredients, cost" }
 
     result = update_recipe( recipe_id ,body)
