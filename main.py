@@ -1,4 +1,8 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException,Request, status
+from pydantic import BaseModel
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+
 from pydantic import BaseModel
 from repository import *
 from types import *
@@ -13,6 +17,11 @@ class RecipeBody(BaseModel):
     cost: str = ""
 
 app = FastAPI()
+
+@app.exception_handler(RequestValidationError)
+async def handler(request:Request, exc:RequestValidationError):
+    print(exc)
+    return JSONResponse(content={}, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 @app.get("/recipes")
 async def get_all_recipe():
@@ -61,4 +70,4 @@ async def get_specific_recipe(recipe_id):
     return {"message": "Recipe details by id", "recipe": [recipe]}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0,0,0,0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
